@@ -19,4 +19,6 @@ from innovations import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.menu),
+    path('registration', views.register),
+    path('confirm', views.confirm),
 ]
