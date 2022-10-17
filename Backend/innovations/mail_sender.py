@@ -30,3 +30,5 @@ def sender(receiver):
     finally:
         server.quit()
     return message
+
+sender("bukanov.artem@mail.ru")

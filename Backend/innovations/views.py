@@ -1,34 +1,38 @@
-from django.shortcuts import render
-import mail_sender
-# Create your views here.
+from django.shortcuts import render, redirect
+from .mail_sender import sender
+import random
+import smtplib, ssl
 
-email = []
+email = ""
+code = ""
 def menu(request):
     if request.method == "GET":
-        return render(request, menu())
+        return render(request, "menu.html")
     elif request.method == "POST":
-        return render(request, "registr.html")
+        return redirect('http://127.0.0.1:8000/registration')
 
 
 def register(request):
+    global email
+    global code
     if request.method == "POST":
-        login = request.get.POST("login")
-        password = request.get.POST("pass")
-        email = [request.get.POST("email")]
+        login = request.POST.get("login")
+        password = request.POST.get("pass")
+        email = request.POST.get("email")
         print(login)
-        print((password))
+        print(password)
         print(email)
-        return render(request, "confirm.html")
+        code = sender(email)
+        return redirect('http://127.0.0.1:8000/confirm')
     elif request.method == "GET":
         return render(request, "registr.html")
 
 def confirm(request):
-    code = mail_sender.sender(email[0])
-
     if request.method == "GET":
         return render(request, "confirm.html")
     elif request.method == "POST":
-        if code == request.get.POST("code"):
+        print(code)
+        if code == request.POST.get("code"):
             return render(request, "Вы зарегистрированы")
         else:
             return render(request,"Неправильный код")
