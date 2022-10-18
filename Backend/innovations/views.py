@@ -33,6 +33,6 @@ def confirm(request):
     elif request.method == "POST":
         print(code)
         if code == request.POST.get("code"):
-            return render(request, "Вы зарегистрированы")
+            return render(request, "true.html")
         else:
-            return render(request,"Неправильный код")
+            return render(request,"false.html")
