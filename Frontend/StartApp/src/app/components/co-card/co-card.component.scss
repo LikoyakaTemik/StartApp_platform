@@ -1,0 +1,46 @@
+.card {
+    display: grid;
+    grid-template-areas:
+    "seens professions share"
+    "title title title"
+    "text text text"
+    "button team like";
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    width: 360px;
+    height: 400px;
+}
+
+.seens {
+    grid-area: seens;
+}
+
+.professions {
+    grid-area: professions;
+}
+
+.share {
+    grid-area: share;
+}
+
+.title {
+    grid-area: title;
+    font-size: 12px;
+}
+
+.text {
+    grid-area: text;
+    font-size: 12px;
+}
+
+.button {
+    grid-area: button;
+}
+
+.team {
+    grid-area: team;
+}
+
+.like {
+    grid-area: like;
+}
