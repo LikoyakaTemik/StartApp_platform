@@ -8,8 +8,13 @@
 <h1 style="size: 48; align-text: center"> Здесь будет сайт </h1>
 <form method="POST" style="margin-left: auto;">
     {% csrf_token %}
+    <p> {{ user.is_authenticated }}</p>
+    {% if user.is_authenticated %}
+    <input type="submit" name="logout" value="Выйти" style="color: green; size: 36px; width: 100px; height: 50px; text-align: center;">
+    {% else %}
     <label> Регистрация</label>
     <input type="submit" name="sub" value="Регистрация" style="color: green; size: 36px; width: 100px; height: 50px; text-align: center;">
+    {% endif %}
 </form>
 </body>
 </html>
