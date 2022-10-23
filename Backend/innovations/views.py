@@ -1,29 +1,50 @@
 from django.shortcuts import render, redirect
 from .mail_sender import sender
-import random
-import smtplib, ssl
-
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import *
+from django.contrib.auth import authenticate, login, logout
 email = ""
 code = ""
+
+
 def menu(request):
     if request.method == "GET":
-        return render(request, "menu.html")
+        try:
+            user = request.session.get('user')
+            password_encoded = (User.objects.get(username=user["login"])).password
+            password = user['password']
+            if check_password(password, password_encoded):
+                user = authenticate(request, username=user['login'], password=password)
+                login(request, user)
+                print(request.user.is_authenticated)
+            return render(request, "menu.html")
+        except:
+            return render(request, "menu.html")
+
     elif request.method == "POST":
-        return redirect('http://127.0.0.1:8000/registration')
+        if request.POST.get("auth") == "Выйти":
+            logout(request)
+            #del request.session["user"]
+            return redirect("http://127.0.0.1:8000")
+        elif request.POST.get("auth") == "Регистрация":
+            return redirect('http://127.0.0.1:8000/registration')
 
 
 def register(request):
     global email
     global code
     if request.method == "POST":
+
         login = request.POST.get("login")
-        password = request.POST.get("pass")
+        password = request.POST.get("password")
         email = request.POST.get("email")
-        print(login)
-        print(password)
-        print(email)
-        code = sender(email)
-        return redirect('http://127.0.0.1:8000/confirm')
+        user = User.objects.create_user(login, email, password)
+        user.last_name = "Bukich"
+        user.save()
+        request.session.set_expiry(3600)
+        request.session['user'] = request.POST
+        print("-------------------------------")
+        return redirect('http://127.0.0.1:8000')
     elif request.method == "GET":
         return render(request, "registr.html")
 
@@ -33,6 +54,18 @@ def confirm(request):
     elif request.method == "POST":
         print(code)
         if code == request.POST.get("code"):
-            return render(request, "true.html")
+            return render(request, "Вы зарегистрированы")
         else:
-            return render(request,"false.html")
+            return render(request,"Неправильный код")
+
+def authentificate(request):
+    if request.method == "GET":
+        if request.session["user_id"] == -999:
+            print("isn't authentificate")
+        else:
+            print("authentificated")
+        return render(request, "confirm.html")
+    elif request.method == "POST":
+        #request.session["user_id"] = user.objects.get(id == 3, -999)
+        request.session.modified = True
+        return render(request, "confirm.html")
