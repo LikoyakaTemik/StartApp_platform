@@ -29,9 +29,20 @@ export class CoNavbarComponent implements OnInit {
       }
     }
 
+    function toggleDropdown(event: any) {
+      let dropdown = document.getElementById("dd-account")
+      if (dropdown != null) {
+        dropdown.classList.toggle("visible")
+      }
+    }
+
     let menuButton = document.getElementById("menu-btn")
     if (menuButton != null) {
       menuButton.addEventListener("click", toggleMenu)
+    }
+    let accountButton = document.getElementById("btn-account")
+    if (accountButton != null) {
+      accountButton.addEventListener("click", toggleDropdown)
     }
   }
 

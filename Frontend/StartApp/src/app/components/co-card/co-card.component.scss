@@ -1,46 +1,82 @@
 .card {
-    display: grid;
-    grid-template-areas:
-    "seens professions share"
-    "title title title"
-    "text text text"
-    "button team like";
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    width: 360px;
-    height: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    background: var(--nav_back);
+    border-radius: 16px;
+    padding: 32px
 }
 
-.seens {
-    grid-area: seens;
-}
-
-.professions {
-    grid-area: professions;
-}
-
-.share {
-    grid-area: share;
-}
-
-.title {
-    grid-area: title;
-    font-size: 12px;
-}
-
-.text {
-    grid-area: text;
-    font-size: 12px;
-}
-
-.button {
-    grid-area: button;
+.header {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    .right {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+        margin-left: auto;
+    }
 }
 
 .team {
-    grid-area: team;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 16px;
+    .icon {
+        fill: var(--text-color);
+    }
+    .bot {
+        font-size: 24px;
+    }
+}
+
+.professions {
+    background: var(--app_back);
+    border-radius: 16px;
+    display: flex;
+    align-content: flex-start;
+    .item {
+        background: var(--nav_back);
+        padding: 8px 16px;
+        border-radius: 16px;
+        margin: 5px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+.title, .text {
+    width: 80%;
+}
+
+.title {
+    font-size: 20px;
+}
+
+.text {
+    font-size: 20px;
 }
 
 .like {
-    grid-area: like;
+    .icon {
+        fill: var(--text-color);
+    }
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    .button {
+        border-radius: 16px;
+        font-size: 20px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 16px;
+        background: var(--second-accent-color);
+    }
 }

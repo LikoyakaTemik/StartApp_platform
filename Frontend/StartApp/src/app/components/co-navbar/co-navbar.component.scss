@@ -19,6 +19,38 @@ header {
     background: var(--nav_back)
 }
 
+.dropdown {
+    display: none;
+    position: absolute;
+    background: var(--nav_back);
+    padding: 16px;
+    border-radius: 16px;
+    transform: translateX(-100px);
+    margin-top: 16px;
+    ul {
+        list-style: none;
+        li {
+            padding: 10px 20px;
+            a {
+                transition: all 0.3s ease 0s;
+                &:hover {
+                    color: var(--accent-color)
+                }
+            }
+        }
+    }
+    &::before{
+        top: -16px;
+        right: 16px;
+        left: auto;
+        border: 8px solid transparent;
+        border-bottom-color: var(--nav_back);
+        position: absolute;
+        display: inline-block;
+        content: "";
+    }
+}
+
 .nav-container {
     display: flex;
     justify-content: space-between;

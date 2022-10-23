@@ -1,6 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { CoCardComponent } from './components/co-card/co-card.component';
+import { HomeComponent } from './components/home/home.component';
+import { CoNavbarComponent } from './components/co-navbar/co-navbar.component';
+import { CoSearchComponent } from './components/co-search/co-search.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -9,7 +13,11 @@ describe('AppComponent', () => {
         RouterTestingModule
       ],
       declarations: [
-        AppComponent
+        AppComponent,
+        CoNavbarComponent,
+        HomeComponent,
+        CoSearchComponent,
+        CoCardComponent
       ],
     }).compileComponents();
   });

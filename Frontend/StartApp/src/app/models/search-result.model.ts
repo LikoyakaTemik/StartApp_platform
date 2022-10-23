@@ -1,4 +1,4 @@
-export interface SearchResult {
+export interface ISearchResult {
     pre: string
     founded: string
     post: string

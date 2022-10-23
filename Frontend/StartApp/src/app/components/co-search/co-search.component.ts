@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from "@angular/forms";
-import { SearchResult } from 'src/app/models/search-result.model';
+import { ISearchResult } from 'src/app/models/search-result.model';
 
 @Component({
   selector: 'app-co-search',
@@ -37,7 +37,7 @@ export class CoSearchComponent implements OnInit {
     "Data Science",
   ]
 
-  validatedData: SearchResult[] = []
+  validatedData: ISearchResult[] = []
 
   searchControl: FormControl;
 
@@ -83,7 +83,7 @@ export class CoSearchComponent implements OnInit {
     }
     console.log(post)
     let founded = result.slice(i, i + query.length).split(" ")
-    let searchResult: SearchResult = {
+    let searchResult: ISearchResult = {
       'pre': pre.join(" "),
       'founded': founded.join(" "),
       'post': post.join(" "),
