@@ -3,18 +3,13 @@ import smtplib, ssl
 
 
 
-def sender(receiver):
+def sender(receiver, message):
     smtp_server = "smtp.gmail.com"
     port = 587  # For starttls
     sender_email = "likoydes@gmail.com"
     receiver_email = receiver
     password = "alaeacjrnnqowboa"
-    message = ""
-    for i in range(0, 6):
-        ch = random.randint(1, 10)
-        message = message + str(ch)
-    if(len(message) > 6):
-        message = message[0] + message[1] + message[2] + message[3] + message[4] + message[5]
+    message = message
     context = ssl.create_default_context()
     try:
         server = smtplib.SMTP(smtp_server,port)
@@ -30,5 +25,3 @@ def sender(receiver):
     finally:
         server.quit()
     return message
-
-sender("bukanov.artem@mail.ru")
