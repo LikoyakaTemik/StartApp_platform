@@ -1,10 +1,21 @@
 from django.shortcuts import render, redirect
 from .mail_sender import sender
-import random
-import smtplib, ssl
+from . import serializers
+from rest_framework import generics, response
+from django.contrib.auth.models import User
 
 email = ""
 code = ""
+
+class personal_cabinet(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+    def get(self, request, *args, **kwargs):
+        user_session = request.session.get("user")
+        user = User.objects.get(nickname = user_session["nickname"])
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+
 def menu(request):
     if request.method == "GET":
         return render(request, "menu.html")

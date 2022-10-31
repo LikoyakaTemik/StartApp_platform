@@ -21,4 +21,5 @@ urlpatterns = [
     path('', views.menu),
     path('registration', views.register),
     path('confirm', views.confirm),
+    path('personal_cabinet/<int:pk>/', views.personal_cabinet.as_view()),
 ]
