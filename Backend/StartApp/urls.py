@@ -16,10 +16,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from innovations import views
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.menu),
     path('registration', views.register),
     path('confirm', views.confirm),
     path('personal_cabinet/<int:pk>/', views.personal_cabinet.as_view()),
+    path('personal_cabinet/<int:pk>/anketa', views.personal_cabinet_anketa.as_view()),
+    path('personal_cabinet/<int:pk>/profile', views.personal_cabinet_profile.as_view()),
+    path('personal_cabinet/<int:pk>/projects', views.personal_cabinet_projects.as_view()),
+    path('personal_cabinet/<int:pk>/applications', views.personal_cabinet_applications.as_view()),
+    path('img/<string>', views.img.as_view())
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
