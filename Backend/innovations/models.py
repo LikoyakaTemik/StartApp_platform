@@ -27,6 +27,7 @@ class OurUser(AbstractUser):
     project_likes = models.CharField(max_length=10000, default="15")
     isForm = models.BooleanField(default=0)
     isActivated = models.BooleanField(default=0)
+    applications = models.TextField(default=None)
 
 class Links(models.Model):
     email = models.CharField(max_length=300, default=None)
