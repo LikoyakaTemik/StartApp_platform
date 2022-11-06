@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { IUser } from 'src/app/models/users.model';
 
 @Component({
   selector: 'app-co-navbar',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class CoNavbarComponent implements OnInit {
 
   constructor() { }
+
+  @Input() user: IUser | null = null
 
   ngOnInit(): void {
     let rotated: boolean = false

@@ -43,10 +43,14 @@
                     </defs>
                 </svg>
                 <div class="dropdown" id="dd-account">
-                    <ul>
-                        <li><a href="">Войти</a></li>
-                        <li><a href="">Выйти</a></li>
-                        <li><a href="">Создать</a></li>
+                    <ul *ngIf="user == null">
+                        <li><a routerLink="/login">Войти</a></li>
+                        <li><a routerLink="/register">Зарегистрироваться</a></li>
+                        <li><a routerLink="">Создать</a></li>
+                    </ul>
+                    <ul *ngIf="user != null">
+                        <li><a routerLink="/cabinet">{{user.username}}</a></li>
+                        <li><a routerLink="">Выйти</a></li>
                     </ul>
                 </div>
             </a>

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ICard } from 'src/app/models/card.model';
+import { IUser } from 'src/app/models/users.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -7,6 +9,8 @@ import { ICard } from 'src/app/models/card.model';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+
+  user: IUser | null = null
 
   cards: ICard[] = [{
     seens: 1000,
@@ -17,7 +21,7 @@ export class HomeComponent implements OnInit {
     professions: [{text: "frontend", color: "#FAFF00"}, {text: "backend", color: "#FF0000"}, {text: "devops", color: "#00FF29"}, {text: "engineer", color: "#FF00FF"}]
   }]
 
-  constructor() {
+  constructor(private auth: AuthService) {
     for (let i = 0; i < 10; i++){
       this.cards.push({
         seens: 1000,
@@ -31,6 +35,9 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let user = this.auth.getUser()
+    if (user != null) {
+      this.user = user
+    }
   }
-
 }
