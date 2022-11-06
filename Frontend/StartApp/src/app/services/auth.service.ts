@@ -25,7 +25,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(data: ILogin) {
-    return this.http.post<ILoginResponse | ILoginResp>(BACKEND_URL + '/api/get2', data, {responseType: 'json', observe: 'body'}).pipe(
+    return this.http.post<any>(BACKEND_URL + '/login', data, {responseType: 'json', observe: 'body'}).pipe(
       catchError(this.errorHandler(data))
     )
   }
@@ -45,8 +45,14 @@ export class AuthService {
     return this.user
   }
 
+  logout() {
+    localStorage.removeItem('user')
+    this.user = null
+    this.http.get(BACKEND_URL + '/logout').subscribe((event) => {})
+  }
+
   register(data: IRegister) {
-    return this.http.post<IRegisterResponse>(BACKEND_URL + '/api/get3', data, {responseType: 'json', observe: 'body'}).pipe(
+    return this.http.post<any>(BACKEND_URL + '/registration', data, {responseType: 'json', observe: 'body'}).pipe(
       catchError(this.errorHandler(data))
     )
   }

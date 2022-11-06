@@ -50,7 +50,7 @@
                     </ul>
                     <ul *ngIf="user != null">
                         <li><a routerLink="/cabinet">{{user.username}}</a></li>
-                        <li><a routerLink="">Выйти</a></li>
+                        <li><a routerLink="/register" (click)="logout()">Выйти</a></li>
                     </ul>
                 </div>
             </a>

@@ -18,19 +18,21 @@ from django.urls import path
 from innovations import views
 from django.conf import settings
 from django.conf.urls.static import static
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.StartPage.as_view()),
-    path('personal_cabinet/<int:pk>/', views.personal_cabinet.as_view()),
-    path('personal_cabinet/<int:pk>/anketa', views.personal_cabinet_anketa.as_view()),
-    path('personal_cabinet/<int:pk>/profile', views.personal_cabinet_profile.as_view()),
-    path('personal_cabinet/<int:pk>/projects', views.personal_cabinet_projects.as_view()),
-    path('personal_cabinet/<int:pk>/applications', views.personal_cabinet_applications.as_view()),
-    path('img/<string>', views.img.as_view())
+    path('personal_cabinet/<int:pk>/anketa', views.PersonalCabinetAnketa.as_view()),
+    path('personal_cabinet/<int:pk>/profile', views.PersonalCabinetProfile.as_view()),
+    path('personal_cabinet/<int:pk>/projects', views.PersonalCabinetProjects.as_view()),
+    path('personal_cabinet/<int:pk>/applications', views.PersonalCabinetApplications.as_view()),
+    path('img/<string>', views.Img.as_view()),
     path('registration', views.Registration.as_view()),
     path('login', views.Authentification.as_view()),
-    path('logout'. views.LogOut.as_view()),
-    path('registration/<int:pk>/', views.Confirm.as_view()),
+    path('logout', views.LogOut.as_view()),
+    path('confirm/<int:pk>/', views.Confirm.as_view()),
+    path('home', views.StartPage.as_view()),
+    path('', views.FrontendRenderer.as_view()),
 ]
 
 if settings.DEBUG:

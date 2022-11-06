@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IUser } from 'src/app/models/users.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-co-navbar',
@@ -8,7 +9,7 @@ import { IUser } from 'src/app/models/users.model';
 })
 export class CoNavbarComponent implements OnInit {
 
-  constructor() { }
+  constructor(private auth: AuthService) { }
 
   @Input() user: IUser | null = null
 
@@ -47,6 +48,11 @@ export class CoNavbarComponent implements OnInit {
     if (accountButton != null) {
       accountButton.addEventListener("click", toggleDropdown)
     }
+  }
+
+  logout() {
+    this.auth.logout()
+    this.user = null
   }
 
 }

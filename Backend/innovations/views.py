@@ -6,8 +6,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import *
 from django.contrib.auth import authenticate, login, logout
 from rest_framework import generics, response
-from models import email_confirm
-import random
+from rest_framework.views import APIView
+from .models import email_confirm
+from random import randint
+from django.views import View
 
 
 email = ""
@@ -17,7 +19,7 @@ code = ""
 def gerenator():
     code = ""
     for i in range(10):
-        code = code + random(0, 9)
+        code = code + str(randint(0, 9))
 
     try:
         email_confirm.objects.get(url="127.0.0.1/registration/" + code)
@@ -26,7 +28,12 @@ def gerenator():
         return code
 
 
-class personal_cabinet_profile(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+class FrontendRenderer(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "innovations/main.html", {})
+
+
+class PersonalCabinetProfile(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         user_session = request.session.get("user")
         user = User.objects.get(nickname=user_session["username"])
@@ -53,7 +60,7 @@ class personal_cabinet_profile(generics.CreateAPIView, generics.RetrieveAPIView,
             pass
 
 
-class personal_cabinet_anketa(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+class PersonalCabinetAnketa(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         user_session = request.session.get("user")
         user = User.objects.get(nickname=user_session["username"])
@@ -109,7 +116,7 @@ class personal_cabinet_anketa(generics.CreateAPIView, generics.RetrieveAPIView, 
         return response.Response({"status": "ok"})
 
 
-class personal_cabinet_projects(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+class PersonalCabinetProjects(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         projects = models.Projects.objects.get(host=request.session.get("user")["username"])
         projects_mas = []
@@ -121,7 +128,7 @@ class personal_cabinet_projects(generics.CreateAPIView, generics.RetrieveAPIView
         pass
 
 
-class personal_cabinet_applications(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+class PersonalCabinetApplications(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         user_session = request.session.get("user")
         user = User.objects.get(username=user_session["username"])
@@ -146,7 +153,7 @@ class personal_cabinet_applications(generics.CreateAPIView, generics.RetrieveAPI
         return response.Response({"projects": projects})
 
 
-class img(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+class Img(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         return response.Response(models.photo.objects.get(url=(request.build_absolute_uri)).file)
 
@@ -169,29 +176,31 @@ class StartPage(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListA
             return response.Response({'username': 'AnonUser'})
 
 
-class LogOut(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+class LogOut(APIView):
     def get(self, request, *args, **kwargs):
         logout(request)
-        request.session['user'].delete()
+        if request.session.get('user') is not None:
+            del request.session["user"]
         return response.Response({'succes': True})
 
 
 
-class Registration(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+class Registration(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
     def post(self, request, *args, **kwargs):
-        quaryset = User.objects.all()
-        serializers_class = serializers.UserSerializer
-        user = self.get_serializer(data=request.data)
-        user.is_valid(raise_exception=True)
-        user.save()
+        user_serializer = self.get_serializer(data=request.data)
+        user_serializer.is_valid(raise_exception=True)
+        user = user_serializer.save()
+        user_data = user_serializer.data
         request.session.set_expiry(3600)
-        request.session['user'] = user
+        request.session['user'] = user_data
 
-        email = email_confirm.objects.create(email=user.email)
-        email.url = "127.0.0.1/registration/" + gerenator()
-        email.save()
-        sender(email.email, email.url)
-        return response.Response({'send': True})
+        # email = email_confirm.objects.create(email=user.email)
+        # email.url = "127.0.0.1/registration/" + gerenator()
+        # email.save()
+        # sender(email.email, email.url)
+        return response.Response({"username": user.username})
 
 
 class Confirm(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
@@ -205,16 +214,16 @@ class Confirm(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPI
 
 class Authentification(generics.ListAPIView, generics.RetrieveAPIView, generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
-        login = request.POST.get("login")
-        password = request.POST.get("password")
+        login_text = request.data.get("login")
+        password = request.data.get("password")
         try:
-            user = User.objects.get(username=login)
+            user = User.objects.get(username=login_text)
             user_sender = user
             if check_password(password, user.password):
-                user = authenticate(request, username=user['login'], password=password)
+                user = authenticate(request, username=user.username, password=password)
                 login(request, user)
                 print(request.user.is_authenticated)
-                request.session['user'] = user_sender
+                request.session['user'] = serializers.UserSerializer(instance=user).data
                 return response.Response({'username': user.username})
             else:
                 return response.Response({'username': 'AnonUser'})

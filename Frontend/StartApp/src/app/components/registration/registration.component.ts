@@ -48,6 +48,7 @@ export class RegistrationComponent implements OnInit {
               this.globalError = false
             }
           } else {
+            this.auth.setUser(result)
             this.router.navigate(['/home'])
           }
         },

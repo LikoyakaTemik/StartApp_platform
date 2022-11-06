@@ -31,9 +31,10 @@ export class LoginComponent implements OnInit {
   on_submit() {
     this.submit = true
     if (this.loginForm.valid){
-      this.auth.login({username: this.loginForm.controls['username'].value, password: this.loginForm.controls['password'].value})
+      this.auth.login({login: this.loginForm.controls['username'].value, password: this.loginForm.controls['password'].value})
       .subscribe({
         next: (result) => {
+          console.log(result)
           if ('errors' in result) {
             if (result.errors != null) {
               console.log("ошибки")
@@ -45,8 +46,8 @@ export class LoginComponent implements OnInit {
               }
             }
           } else {
-            if ( result.user != undefined) {
-              this.auth.setUser({'username': "joe"})
+            if ( result.username != undefined && result.username != 'AnonUser') {
+              this.auth.setUser(result)
               this.router.navigate(['/home'])
             } else {
               this.globalError = true

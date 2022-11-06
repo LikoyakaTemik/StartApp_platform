@@ -9,24 +9,7 @@ import { ISearchResult } from 'src/app/models/search-result.model';
 })
 export class CoSearchComponent implements OnInit {
 
-  data: string[] = [
-    "Биба",
-    "Боба",
-    "Два долбаёба",
-    "Биба",
-    "Боба",
-    "Два долбаёба",
-    "Биба",
-    "Боба",
-    "Два долбаёба",
-    "Биба",
-    "Боба",
-    "Два долбаёба",
-    "Биба",
-    "5 Боба",
-    "5",
-    "Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёбаДва долбаёба Два долбаёба Два долбаёба супер да бля, 3 крутых мужика ёёу долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёбаДва долбаёба Два долбаёба Два долбаёба Два 3 долбаёбаДва долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёба Два долбаёбаДва долбаёба Два долбаёба Два долбаёба Два 3 долбаёбаДва долбаёба Два долбаёба Два долбаёба Два долбаёба ",
-  ]
+  data: string[] = []
 
   categories: string[] = [
     "Devops",
@@ -46,6 +29,9 @@ export class CoSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    for (let i = 0; i < 10; i++) {
+      this.data.push("Тестовые данные для демонстрации работы поиска Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis hic delectus id, cupiditate natus optio cum. Velit laboriosam perspiciatis nisi labore quis quos aliquam! Hic amet earum, laborum aliquid iste reiciendis totam blanditiis distinctio rem placeat aut vero. Optio iusto, sequi aliquam totam quidem pariatur doloribus fugit natus temporibus incidunt hic magni modi dolorum placeat iure repellendus explicabo! Velit, eaque?")
+    }
     this.searchControl.valueChanges.subscribe((search_data) => {
 
       if (search_data.length == 0){
