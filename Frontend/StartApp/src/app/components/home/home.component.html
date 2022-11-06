@@ -1,0 +1,16 @@
+<app-co-navbar [user]="user"></app-co-navbar>
+<div class="body-container">
+    <div class="wrapper">
+        <div class="header">
+            <p>Для тех, кто хочет жить... Geek Brains Skillbox Skillfactory</p>
+            <p>Think about it!</p>
+        </div>
+        <div class="box">
+            <app-co-search></app-co-search>
+            <div class="line"></div>
+        </div>
+        <div class="content">
+            <app-co-card *ngFor="let card of cards" [card]="card"></app-co-card>      
+        </div>
+    </div>
+</div>
