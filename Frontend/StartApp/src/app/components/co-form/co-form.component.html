@@ -1,0 +1,126 @@
+<form id="timeline-content" [formGroup]="ankete">
+    <h1>Анкета</h1>
+  
+    <ul class="timeline bg-gray-900">
+      <li class="event" data-date="Ф.И.О">
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('surname')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <input class="input" type="text" placeholder="Фамилия" formControlName="surname"/>
+        </div>
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('name')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <input class="input" type="text" placeholder="Имя" formControlName="name"/>
+        </div>
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('patronymic')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <input class="input" type="text" placeholder="Отчество" formControlName="patronymic"/>
+        </div>
+      </li>
+      <li class="event" data-date="О себе">
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('date_borned')?.errors != null && submit">Недопустимое значение</p>
+            <input id="date_borned" class="input" type="date" placeholder="Дата рождения" formControlName="date_borned"/>
+        </div>
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('country')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <input class="input" type="text" placeholder="Страна" formControlName="country"/>
+        </div>
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('city')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <input class="input" type="text" placeholder="Город" formControlName="city"/>
+        </div>
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('citizenship')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <input class="input" type="text" placeholder="Гражданство" formControlName="citizenship"/>
+        </div>
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('male')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <div class="radio-inline">
+                <input id="gender1" value="0" type="radio" name="male" formControlName="male" checked="true"/>
+                <label for="gender1">Мужчина</label>
+                <input id="gender2" value="1" type="radio" name="male" formControlName="male" />
+                <label for="gender2" class="radio-label">Женщина</label>
+            </div>
+        </div>
+      </li>
+      <li class="event" data-date="Образование">
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('university')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <input  class="input" type="text" placeholder="Вуз" formControlName="university"/>
+        </div>
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('speciality')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <input  class="input" type="text" placeholder="Специальность" formControlName="speciality"/>
+        </div>
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('date_expirated')?.errors != null && submit">Недопустимое значение</p>
+            <input id="date_expirated" class="input" type="date" placeholder="Дата рождения" formControlName="date_expirated"/>
+        </div>
+        
+      </li>
+      <li class="event" id="date" data-date="Контактные данные">
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('email')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <input class="input" type="text" placeholder="Почта" formControlName="email"/>
+        </div>
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('phone')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <p class="error" *ngIf="ankete.get('phone')?.errors?.['phone'] != null && submit">Неверный формат телефона</p>
+            <input class="input" type="tel" placeholder="Телефон" formControlName="phone" maxlength="11" minlength="11"/>
+        </div>
+      </li>
+      
+      <li class="event" data-date="Опыт работы">
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('employment')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <div class="radio-inline">
+                <input id="work1" value="0" type="radio" name="employment" formControlName="employment" checked="true"/>
+                <label for="work1">По найму</label>
+                <input id="work2" value="1" type="radio" name="employment" formControlName="employment" />
+                <label for="work2" class="radio-label">На себя</label>
+                <input id="work3" value="2" type="radio" name="employment" formControlName="employment" />
+                <label for="work3" class="radio-label">Без работы</label>
+            </div>
+        </div>
+        <div class="input-container hg">
+            <p class="error" *ngIf="ankete.get('achievements')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <textarea class="input" type="text" placeholder="Достижения/Профессиональный опыт" formControlName="achievements"></textarea>
+        </div>
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('skills')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <input class="input" type="text" placeholder="Навыки" formControlName="skills"/>
+        </div>
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('work_experience')?.errors?.['min'] != null">Недопустимое значение</p>
+            <p class="error" *ngIf="ankete.get('work_experience')?.errors?.['max'] != null">Недопустимое значение</p>
+            <p class="error" *ngIf="ankete.get('work_experience')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <input class="input" type="number" min="0" max="100" placeholder="Опыт работы" formControlName="work_experience"/>
+        </div>
+      </li>
+      <li class="event" id="date" data-date="Команда">
+        <div class="input-container">
+            <p class="error" *ngIf="ankete.get('is_have_team')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <div class="radio-inline">
+                <input id="team1" value="0" type="radio" name="is_have_team" formControlName="is_have_team" checked="true"/>
+                <label for="team1">Есть команда</label>
+                <input id="team2" value="1" type="radio" name="is_have_team" formControlName="is_have_team" />
+                <label for="team2" class="radio-label">Нет команды</label>
+            </div>
+        </div>
+        <div class="input-container" *ngIf="ankete.get('is_have_team')?.value == 0">
+            <p class="error" *ngIf="ankete.get('role')?.errors?.['required'] != null && submit">Обязательное поле</p>
+            <input  class="input" type="text" placeholder="Роль в команде" formControlName="role"/>
+        </div>
+      </li>
+      <li class="event" id="date" data-date="Предпренимательство">
+        <p class="error" *ngIf="ankete.get('inn')?.errors?.['required'] != null && submit">Обязательное поле</p>
+        <div class="input-container">
+            <input  class="input" type="text" placeholder="Патенты на объекты интеллектуальной собственности" />
+        </div>
+        <div class="input-container">
+            <input  class="input" type="text" placeholder="ИНН (при наличии своей компании)" formControlName="inn"/>
+        </div>
+      </li>
+      <button id="auth-sub" class="bold" (click)="on_submit()">Обновить</button>
+    </ul>
+  </form>
