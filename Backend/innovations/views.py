@@ -1,15 +1,18 @@
 from django.shortcuts import render, redirect
 from .mail_sender import sender
+from . import serializers, models
+from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import *
 from django.contrib.auth import authenticate, login, logout
 from rest_framework import generics, response
-from . import serializers
 from models import email_confirm
 import random
 
+
 email = ""
 code = ""
+
 
 def gerenator():
     code = ""
@@ -21,6 +24,132 @@ def gerenator():
         gerenator()
     except:
         return code
+
+
+class personal_cabinet_profile(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+    def get(self, request, *args, **kwargs):
+        user_session = request.session.get("user")
+        user = User.objects.get(nickname=user_session["username"])
+        return response.Response({'description': user.description, 'fio': user.fio, 'photo': user.image})
+
+    def post(self, request, *args, **kwargs):
+        if request.key == "photo":
+            user_session = request.session.get("user")
+            user = User.objects.get(nickname=user_session["username"])
+            new_url = "127.0.0.1/" + user.id + "/" + request.file.name
+            photo = models.photo.objects.get(url=user.image)
+            photo.url = new_url
+            photo.file = request.file
+            user.image = new_url
+            photo.save()
+            user.save()
+            fs = FileSystemStorage
+            fs.save(request.file.name, request.file)  ##подписать в регистрации создание объекта таблицы image
+            return response.Response({"ok": "yeea"})
+
+        elif request.key == "edit_password":
+            pass
+        elif request.key == "edit_email":
+            pass
+
+
+class personal_cabinet_anketa(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+    def get(self, request, *args, **kwargs):
+        user_session = request.session.get("user")
+        user = User.objects.get(nickname=user_session["username"])
+        return response.Response({'user': user})
+
+    def post(self, request, *args, **kwargs):
+        name = request.name
+        surname = request.surname
+        patronymic = request.patronymic
+        fio = surname + "," + name + "," + patronymic
+        bornAge = request.date_borned
+        country = request.country
+        city = request.city
+        citizenship = request.citizenship
+        sex = request.male
+        phone = request.phone
+        university = request.university
+        speciality = request.speciality
+        date_expirated = request.date_expirated
+        education = university + speciality + date_expirated
+        email = request.email
+        busyness = request.employment
+        experience = request.work_experience
+        skills_mas = request.skills
+        skills = ""
+        for i in range(skills_mas):
+            skills = skills + skills_mas[i] + ","
+        achievements = request.achievments
+        isTeam = request.is_has_team
+        role = request.role
+        requisites = request.requisites
+        inn = request.inn
+        user_session = request.session.get("user")
+        user = User.objects.get(nickname=user_session["username"])
+        user.fio = fio
+        user.bornAge = bornAge
+        user.country = country
+        user.city = city
+        user.citizenship = citizenship
+        user.sex = sex
+        user.phone = phone
+        user.education = education
+        user.email = email
+        user.busyness = busyness
+        user.expirence = experience
+        user.skills = skills
+        user.achievments = achievements
+        user.isTeam = isTeam
+        user.role = role
+        user.requisites = requisites
+        user.inn = inn
+        user.save()
+        return response.Response({"status": "ok"})
+
+
+class personal_cabinet_projects(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+    def get(self, request, *args, **kwargs):
+        projects = models.Projects.objects.get(host=request.session.get("user")["username"])
+        projects_mas = []
+        for i in range(projects):
+            projects_mas[i] = projects[i]
+        return response.Response({"projects": projects_mas})
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+
+class personal_cabinet_applications(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+    def get(self, request, *args, **kwargs):
+        user_session = request.session.get("user")
+        user = User.objects.get(username=user_session["username"])
+        id_projects = user.applications.split()
+        projects = []
+        for i in range(id_projects):
+            projects[i] = models.Projects.get(id=id_projects[i])
+        return response.Response({"projects": projects})
+
+    def post(self, request, *args, **kwargs):
+        user_session = request.session.get("user")
+        user = User.objects.get(username=user_session["username"])
+        id_projects = user.applications.split()
+        id_projects.remove(request.project_id)
+        projects = []
+        projects_bd = ""
+        for i in range(id_projects):
+            projects[i] = models.Projects.get(id=id_projects[i])
+            projects_bd = projects_bd + id_projects[i] + ","
+        user.applications = projects_bd
+        user.save()
+        return response.Response({"projects": projects})
+
+
+class img(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
+    def get(self, request, *args, **kwargs):
+        return response.Response(models.photo.objects.get(url=(request.build_absolute_uri)).file)
+
 
 
 class StartPage(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
@@ -46,29 +175,6 @@ class LogOut(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIV
         request.session['user'].delete()
         return response.Response({'succes': True})
 
-def menu(request):
-    if request.method == "GET":
-        try:
-            user = request.session.get('user')
-            print(request.session.get('user'))
-            password_encoded = (User.objects.get(username=user["login"])).password
-            password = user['password']
-            
-            if check_password(password, password_encoded):
-                user = authenticate(request, username=user['login'], password=password)
-                login(request, user)
-                print(request.user.is_authenticated)
-            return render(request, "menu.html")
-        except:
-            return render(request, "menu.html")
-
-    elif request.method == "POST":
-        if request.POST.get("auth") == "Выйти":
-            logout(request)
-            return redirect("http://127.0.0.1:8000")
-        elif request.POST.get("auth") == "Регистрация":
-            return redirect('http://127.0.0.1:8000/registration')
-
 
 
 class Registration(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
@@ -87,6 +193,7 @@ class Registration(generics.CreateAPIView, generics.RetrieveAPIView, generics.Li
         sender(email.email, email.url)
         return response.Response({'send': True})
 
+
 class Confirm(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         email = email_confirm.objects.get(url=request.build_absolute_uri()).email
@@ -95,33 +202,6 @@ class Confirm(generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPI
         user.save()
         return response.Response({'post': user.data})
 
-def register(request):
-    global email
-    global code
-    if request.method == "POST":
-
-        login = request.POST.get("login")
-        password = request.POST.get("password")
-        email = request.POST.get("email")
-        user = User.objects.create_user(login, email, password)
-        user.last_name = "Bukich"
-        user.save()
-        request.session.set_expiry(3600)
-        request.session['user'] = request.POST
-        print("-------------------------------")
-        return redirect('http://127.0.0.1:8000')
-    elif request.method == "GET":
-        return render(request, "registr.html")
-
-def confirm(request):
-    if request.method == "GET":
-        return render(request, "confirm.html")
-    elif request.method == "POST":
-        print(code)
-        if code == request.POST.get("code"):
-            return render(request, "Вы зарегистрированы")
-        else:
-            return render(request, "Неправильный код")
 
 class Authentification(generics.ListAPIView, generics.RetrieveAPIView, generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
@@ -153,17 +233,7 @@ class Authentification(generics.ListAPIView, generics.RetrieveAPIView, generics.
             except:
                 return response.Response({'username': 'AnonUser'})
 
-def authentificate(request):
-    if request.method == "GET":
-        if request.session["user_id"] == -999:
-            print("isn't authentificate")
-        else:
-            print("authentificated")
-        return render(request, "confirm.html")
-    elif request.method == "POST":
-        #request.session["user_id"] = user.objects.get(id == 3, -999)
-        request.session.modified = True
-        return render(request, "confirm.html")
+
 
 class Questionnaire(generics.ListAPIView, generics.RetrieveAPIView, generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
@@ -212,7 +282,8 @@ class Questionnaire(generics.ListAPIView, generics.RetrieveAPIView, generics.Cre
             if INN is None:
                 is_confirmed = False
         user = User.objects.get(username=request.session["user"]['username'])
-        return response.Response(request)
+        return response.Response({"request": request})
 
     def get(self, request, *args, **kwargs):
-        return response.Response(request)
+        return response.Response({"is_ok": "ok")
+
