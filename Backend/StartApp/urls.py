@@ -18,7 +18,11 @@ from django.urls import path
 from innovations import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.menu),
-    path('registration', views.register),
-    path('confirm', views.confirm),
+    path('', views.StartPage.as_view()),
+    path('registration', views.Registration.as_view()),
+    path('login', views.Authentification.as_view()),
+    path('logout'. views.LogOut.as_view()),
+    path('registration/<int:pk>/', views.Confirm.as_view()),
+    """path('', views.menu),
+    path('registration', views.register),"""
 ]
