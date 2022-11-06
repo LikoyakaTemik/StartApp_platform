@@ -285,5 +285,5 @@ class Questionnaire(generics.ListAPIView, generics.RetrieveAPIView, generics.Cre
         return response.Response({"request": request})
 
     def get(self, request, *args, **kwargs):
-        return response.Response({"is_ok": "ok")
+        return response.Response({"is_ok": "ok"})
 
